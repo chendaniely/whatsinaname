@@ -1,0 +1,42 @@
+[project]
+# Install name: hyphens are conventional on PyPI and in pip/uv install commands.
+# This name intentionally differs from every folder under src/ to show
+# that the install name and the import name are independent.
+name = "whats-in-a-name"
+version = "0.2.0"
+description = "Demonstrate how folder, file, and variable names affect install vs import"
+readme = "README.md"
+authors = [
+    { name = "Daniel Chen", email = "chendaniely@gmail.com" }
+]
+requires-python = ">=3.9"
+dependencies = []
+
+# The build system has two parts:
+#   backend (hatchling): knows how to package the code into a wheel
+#   frontend (uv, pip, build): calls the backend and handles the output
+# "uv build" and "pip install" are both frontends -- they read this section
+# and delegate to hatchling. Swapping the frontend does not change the backend.
+#
+# uv init --lib defaults to uv_build, which expects a src/ folder named after
+# the project (hyphens converted to underscores). Since this project's install
+# name (whats-in-a-name) intentionally differs from its import-name folders,
+# uv_build would error looking for src/whats_in_a_name/. Hatchling lets us
+# declare each package path explicitly, so the install name and folder names
+# can be whatever we want.
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Each folder here becomes a separately importable package after install.
+# A typical project would have just one entry.
+# All six are bundled into the single whats-in-a-name wheel.
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/whatsinaname",
+    "src/whats_in_a_name",
+    "src/whats_new_module",
+    "src/whats_new_func",
+    "src/whats_init_import",
+    "src/whats_init_all",
+]
